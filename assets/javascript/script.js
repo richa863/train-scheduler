@@ -1,4 +1,8 @@
-var config = {
+
+	
+$(document).ready(function(){
+
+	var config = {
 		apiKey: "AIzaSyBnPLmoLynDVrca0XvSMT6R3MwK-Z9YSM8",
 		authDomain: "train-scheduler-54cc1.firebaseapp.com",
 		databaseURL: "https://train-scheduler-54cc1.firebaseio.com",
@@ -8,19 +12,15 @@ var config = {
 		
 	  };
 	  firebase.initializeApp(config)
-	var timeData = firebase.database()
-$(document).ready(function(){
-
+	  var timeData = firebase.database()
 	
 	  
-	
-	  
-	$("#submit").on("click", function(){
-
+	$("#submit").on("click", function(event){
+event.preventDefault()
 
 		var lineName = $("#lineNameInput").val().trim();
 		var destination = $("#destinationInput").val().trim();
-		var firstRun = moment($("#trainInput").val().trim(), "HH:mm").subtract(10, "years").format("X");
+		var firstRun = moment($("#trainInput").val().trim(), "HH:mm").subtract(1, "years").format("X");
 		var frequency = $("#frequencyInput").val().trim();
 
 
@@ -31,12 +31,12 @@ $(document).ready(function(){
 			frequency: frequency
 		};
 
-		
-		timeData.push(trainInfo);
+		console.log(timeData)
+		timeData.ref().push(trainInfo);
 
 		console.log(trainInfo.name);
 		console.log(trainInfo.destination); 
-		console.log(firstRun);
+		console.log(trainInfo.firstRun);
 		console.log(trainInfo.frequency)
 
 		
@@ -56,7 +56,7 @@ $(document).ready(function(){
 
 
 	
-	timeData.on("child_added", function(childSnapshot, prevChildKey){
+	timeData.ref().on("child_added", function(childSnapshot, prevChildKey){
 
 		console.log(childSnapshot.val());
 
@@ -80,7 +80,7 @@ $(document).ready(function(){
 		console.log(moment().format("X"));
 
 
-		$("#trainSchedule > tbody").append("<tr><td>" + fbaseName + "</td><td>" + fbaseDestination + "</td><td>" + fbaseFrequency + "</td><td>" + arrival + "</td><td>" + minutes + "</td></tr>");
+		$("#scheduleBody").append("<tr><td>" + fbaseName + "</td><td>" + fbaseDestination + "</td><td>" + fbaseFrequency + "</td><td>" + arrival + "</td><td>" + minutes + "</td></tr>");
 
 	});
 });
